@@ -1,5 +1,7 @@
 # Performance work and validation
 
+Version 0.1.2 retains the 0.1.1 decoder algorithms described below and updates optional Python tooling to a patched Pillow version. The performance evidence remains the original 0.1.1 measurement, rather than a newly claimed full-corpus run.
+
 ## What changed
 
 Version 0.1.1 optimizes pixel thresholding and reuses image calculations. It computes luminance once per scan, reuses column window bounds, skips variance calculations in mean-only thresholding, and reuses standard threshold images for repeated and inverted passes. Caching is bounded and scoped to one scan, including its original and reduced resolutions. It does not retain answers across documents.

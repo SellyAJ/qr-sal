@@ -21,10 +21,10 @@ The decoder core has **zero runtime dependencies**. The demo uses PDF.js to rend
 The package is distributed through this GitHub repository and its releases. It is **not published to the npm registry**.
 
 ```sh
-npm install github:SellyAJ/qr-sal#v0.1.1
+npm install github:SellyAJ/qr-sal#v0.1.2
 ```
 
-Git installs run the `prepare` build and need development dependencies. For an already-built package, download `qr-sal-0.1.1.tgz` from [Releases](https://github.com/SellyAJ/qr-sal/releases) and run `npm install ./qr-sal-0.1.1.tgz`. For reproducibility, pin the release tag or commit rather than the moving branch.
+Git installs run the `prepare` build and need development dependencies. For an already-built package, download `qr-sal-0.1.2.tgz` from [Releases](https://github.com/SellyAJ/qr-sal/releases) and run `npm install ./qr-sal-0.1.2.tgz`. For reproducibility, pin the release tag or commit rather than the moving branch.
 
 ```js
 import { scan } from 'qr-sal';

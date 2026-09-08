@@ -1,4 +1,4 @@
-QR Sal 0.1.1
+QR Sal 0.1.2
 
 Detection, geometric sampling, QR format/data parsing, and Reed-Solomon
 decoding are implemented in this project source. No WeChat, ZXing, jsQR, ZBar,

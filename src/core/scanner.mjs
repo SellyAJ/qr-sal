@@ -20,7 +20,7 @@ import {
   fitFinderMap,
   verifyProjectiveFinder,
 } from './finder-geometry.mjs';
-export const ENGINE_VERSION = 'qr-sal-0.1.1';
+export const ENGINE_VERSION = 'qr-sal-0.1.2';
 export function grayscale(image) {
   const { width, height, data } = image;
   if (

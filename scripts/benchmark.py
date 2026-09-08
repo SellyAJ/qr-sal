@@ -1,6 +1,6 @@
 """Evaluate a local BoofCV qrcodes directory; photographs/payloads are not published.
 
-python -m pip install Pillow==11.3.0 numpy==2.2.6 opencv-python-headless==4.12.0.88 zxing-cpp==3.0.0
+python -m pip install Pillow==12.3.0 numpy==2.2.6 opencv-python-headless==4.12.0.88 zxing-cpp==3.0.0
 python scripts/benchmark.py /path/to/qrcodes --output benchmark-results.json
 
 The directory must contain detection/ and decoding/. Obtain the archive from

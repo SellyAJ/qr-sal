@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2 — 2026-09-09
+
+- Update optional Python fixture/benchmark tooling to Pillow 12.3.0, resolving the dependency range flagged by 18 GitHub advisories. Add weekly Python dependency updates.
+- Preserve the 0.1.1 decoder algorithms and measured outputs; only its release label changes. Pillow is not a browser or JavaScript runtime dependency.
+
 ## 0.1.1 — 2026-09-09
 
 - Reuse grayscale and bounded standard threshold images within a scan; invert existing threshold bits for inverted retries. Reuse column bounds and avoid variance work in mean-only thresholding.
