@@ -51,7 +51,7 @@ python scripts/benchmark.py /path/to/qrcodes --output benchmark-results.json
 
 The directory must contain `detection/` and `decoding/`. Use `--limit 5` for a smoke test, clearly labelled partial, or `--time-limit-ms 12000` to compare another budget. The harness reads source pixels independently of annotations, uses the public API, and emits counts, timings, image hashes and matching status without raw decoded payloads. It runs sequentially, unlike the recorded four-partition engine run, so budget-sensitive results and timing can differ. Keep reports local and inspect before publishing.
 
-Historical source rendering used Pillow 11.3.0. Current reproduction instructions use patched Pillow 12.3.0. Compare the recorded pixel hashes when reproducing older measurements; changed pixels must be reported as a different input, not silently treated as the original run.
+Earlier reproduction instructions pinned Pillow 11.3.0; they now specify patched Pillow 12.3.0. Compare the recorded pixel hashes when reproducing measurements; changed pixels must be reported as a different input, not silently treated as the original run.
 
 For the 4,593-crop set, obtain the `Unreadable Scanned QR Codes` subset from the publisher’s archive, excluding learning and simulated images; compare full returned text with `Data.csv`, retaining the two known label issues. The provided BoofCV harness is not a parser for that separate CSV.
 
