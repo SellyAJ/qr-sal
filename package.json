@@ -69,7 +69,7 @@
   "devDependencies": {
     "esbuild": "0.28.2",
     "pdfjs-dist": "6.3.289",
-    "prettier": "3.8.1",
+    "prettier": "3.9.6",
     "typescript": "5.9.3"
   }
 }
