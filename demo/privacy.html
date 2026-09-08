@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Privacy — QR Sal</title>
+    <meta
+      name="description"
+      content="How QR Sal processes your QR images locally and what the static host receives."
+    />
+    <meta name="referrer" content="no-referrer" />
+    <link rel="canonical" href="https://sellyaj.github.io/qr-sal/privacy.html" />
+    <link rel="icon" href="assets/icon.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="./"
+        ><img src="assets/icon.svg" width="34" height="34" alt="" />QR Sal.</a
+      >
+    </header>
+    <main class="privacy-page">
+      <h1>Your files stay on your device.</h1>
+      <p>
+        QR Sal decodes selected files in your browser using a local Web Worker. There is
+        no upload endpoint, AI service, API key, account, analytics script, or
+        advertising.
+      </p>
+      <h2>What gets loaded</h2>
+      <p>
+        The static host serves the page, JavaScript, fonts and a synthetic QR sample.
+        PDF.js and its support files load from the same host when you open a PDF. The host
+        can receive ordinary request metadata such as your IP address; QR Sal does not
+        send it the files you select or their decoded text. See
+        <a
+          href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+          >GitHub’s privacy statement</a
+        >
+        for hosting details.
+      </p>
+      <h2>Results and exports</h2>
+      <p>
+        Files and results are held in memory. Clear resets the current document; closing
+        the page releases its session. Nothing is intentionally stored in local storage or
+        IndexedDB. Copy and Export JSON run only when you choose them. Exported results
+        include decoded text, page numbers and geometry. If you enable diagnostic tracing,
+        the export can also include source fragments. Inspect exports before sharing them.
+      </p>
+      <h2>Links inside QR codes</h2>
+      <p>
+        Decoded content is displayed as text. QR Sal does not open decoded links
+        automatically or execute decoded markup. Decoding does not authenticate the sender
+        or verify link safety.
+      </p>
+      <h2>Inspect the code</h2>
+      <p>
+        <a href="https://github.com/SellyAJ/qr-sal">Source on GitHub</a> ·
+        <a href="./">Back to the scanner</a>
+      </p>
+    </main>
+  </body>
+</html>

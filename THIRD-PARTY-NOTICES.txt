@@ -1,0 +1,41 @@
+QR Sal 0.1.0
+
+Detection, geometric sampling, QR format/data parsing, and Reed-Solomon
+decoding are implemented in this project source. No WeChat, ZXing, jsQR, ZBar,
+OpenCV or BarcodeDetector implementation is called by this scanner.
+
+QR block-parameter table data was transcribed from Project Nayuki's
+QR Code generator (https://www.nayuki.io/page/qr-code-generator-library).
+Copyright (c) Project Nayuki. (MIT License)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Mathematical/format references consulted:
+QR Code Model 2 (ISO/IEC 18004); DENSO WAVE QR version documentation;
+ZXing's Apache-2.0-licensed format-reader and Reed-Solomon reference code.
+The decoder uses its own Berlekamp-Massey implementation and image detector.
+
+PDF.js (Mozilla, Apache-2.0) is used only to render/open PDF files.
+It does not detect or decode QR codes. The static demo ships its license at vendor/PDFJS-LICENSE.txt.
+The test fixtures are independently generated with Python qrcode 8.2;
+the fixture generator is not shipped as a runtime decoder.
+
+Manrope font — Copyright 2018 The Manrope Project Authors.
+SIL Open Font License 1.1; full notice at demo/assets/OFL.txt (assets/OFL.txt in the demo).
+Source: https://github.com/google/fonts/tree/main/ofl/manrope

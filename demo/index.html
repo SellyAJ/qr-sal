@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QR Sal — Free QR Code Scanner for Images & PDFs</title>
+    <meta
+      name="description"
+      content="Scan QR codes from images and PDFs locally in your browser. QR Sal is a free, open-source JavaScript decoder with multi-code detection and recovery passes."
+    />
+    <meta name="theme-color" content="#f6f8fc" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; img-src 'self' blob: data:; style-src 'self'; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <link rel="canonical" href="https://sellyaj.github.io/qr-sal/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="QR Sal — A closer read." />
+    <meta
+      property="og:description"
+      content="Free, open-source QR decoding. Images and PDFs, processed on your device."
+    />
+    <meta property="og:url" content="https://sellyaj.github.io/qr-sal/" />
+    <meta
+      property="og:image"
+      content="https://sellyaj.github.io/qr-sal/assets/social.png"
+    />
+    <meta property="og:image:alt" content="QR Sal — open-source QR decoder by Sal" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="assets/manrope.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.mjs"></script>
+  </head>
+  <body>
+    <a class="skip" href="#scanner">Skip to scanner</a>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="QR Sal home"
+        ><img src="assets/icon.svg" width="34" height="34" alt="" /><span
+          >QR Sal<span class="brand-dot">.</span></span
+        ></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="#developers">For developers</a
+        ><a class="repo-link" href="https://github.com/SellyAJ/qr-sal"
+          >GitHub
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 17 17 7M7 7h10v10" /></svg
+        ></a>
+      </nav>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <h1 id="page-title">A closer read.</h1>
+          <p>Scan QR codes from images and PDFs. All on your device.</p>
+        </div>
+        <span class="privacy-note"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="5" y="10" width="14" height="11" rx="2" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg
+          >No uploads. No API key.</span
+        >
+      </section>
+      <section id="scanner" class="scanner" aria-label="QR code scanner">
+        <div class="source-panel">
+          <div class="panel-toolbar">
+            <h2>Source</h2>
+            <span id="file-name">No file selected</span
+            ><button id="clear" class="text-button" hidden>Clear</button>
+          </div>
+          <div id="drop-zone" class="drop-zone">
+            <div id="empty-source" class="empty-source">
+              <div class="sample-frame">
+                <img
+                  src="assets/sample.png"
+                  width="410"
+                  height="410"
+                  alt="Synthetic sample QR code linking to the QR Sal repository"
+                />
+              </div>
+              <h3>Drop a file. Find the code.</h3>
+              <p>PNG, JPG, WebP, GIF, BMP or PDF · up to 50 MB</p>
+              <div class="file-actions">
+                <button id="choose" class="primary">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 16V4m-5 5 5-5 5 5M4 16v4h16v-4" /></svg
+                  >Choose a file</button
+                ><button id="sample" class="secondary">Try a sample</button>
+              </div>
+              <p class="sample-label">The sample is a generated QR, ready to scan.</p>
+            </div>
+            <div id="preview" class="preview" hidden>
+              <canvas
+                id="canvas"
+                aria-label="Selected page with detected QR outlines"
+              ></canvas>
+            </div>
+            <input
+              id="file"
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif,image/bmp,application/pdf"
+              hidden
+            />
+          </div>
+          <div class="scan-toolbar">
+            <div class="page-controls" id="page-controls" hidden>
+              <button id="previous" class="icon-button" aria-label="Previous PDF page">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m14 6-6 6 6 6" />
+                </svg></button
+              ><span id="page-label">Page 1</span
+              ><button id="next" class="icon-button" aria-label="Next PDF page">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m10 6 6 6-6 6" />
+                </svg>
+              </button>
+            </div>
+            <span id="source-hint">Multiple QR codes supported</span>
+            <div class="loaded-actions" id="loaded-actions" hidden>
+              <button id="replace" class="text-button">Replace file</button
+              ><button id="rescan" class="primary small">Scan again</button>
+            </div>
+            <button id="cancel" class="secondary small" hidden>Cancel</button>
+          </div>
+        </div>
+        <aside class="result-panel" aria-labelledby="results-title">
+          <div class="panel-toolbar">
+            <h2 id="results-title">Decoded content</h2>
+            <span id="result-count" class="count">0</span>
+          </div>
+          <div id="status" class="status" role="status" aria-live="polite">
+            Ready when you are
+          </div>
+          <div id="results" class="results">
+            <div class="empty-result">
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <path d="M8 18V8h10m12 0h10v10M8 30v10h10m12 0h10V30M15 24h18" />
+              </svg>
+              <h3>Your results, right here.</h3>
+              <p>Select a file to see its QR content and detected regions.</p>
+            </div>
+          </div>
+          <div class="result-actions">
+            <button id="copy-all" class="secondary small" disabled>Copy text</button
+            ><button id="download" class="text-button" disabled>Export JSON</button>
+          </div>
+        </aside>
+      </section>
+      <div class="below-scanner">
+        <details class="settings">
+          <summary>Scan settings</summary>
+          <div class="settings-fields">
+            <label
+              >Time per page<select id="budget">
+                <option value="3000">3 seconds — quick</option>
+                <option value="12000" selected>12 seconds — balanced</option>
+                <option value="35000">35 seconds — deeper recovery</option>
+                <option value="60000">60 seconds — extended</option>
+              </select></label
+            ><label class="check-label"
+              ><input type="checkbox" id="multiple" checked />Find multiple codes</label
+            ><label class="check-label"
+              ><input type="checkbox" id="recovery" checked />Enable recovery
+              passes</label
+            ><label class="check-label"
+              ><input type="checkbox" id="trace" />Include diagnostic trace</label
+            >
+            <p>
+              Apply settings with Scan again. Traces can contain source fragments and
+              decoded text; inspect exports before sharing.
+            </p>
+          </div>
+        </details>
+        <span id="timing">QR Model 2 · JavaScript · MIT licensed</span>
+      </div>
+      <section
+        id="developers"
+        class="developer-section"
+        aria-labelledby="developer-title"
+      >
+        <div>
+          <h2 id="developer-title">Make it part of your project.</h2>
+          <p>
+            Raw pixels in. Decoded text and corners out. No runtime dependencies in the
+            core.
+          </p>
+          <a class="inline-link" href="https://github.com/SellyAJ/qr-sal#quick-start"
+            >Installation & API docs
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 12h16m-6-6 6 6-6 6" /></svg></a
+          ><a
+            class="inline-link"
+            href="https://github.com/SellyAJ/qr-sal/blob/main/docs/BENCHMARKS.md"
+            >Benchmarks & limitations
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 12h16m-6-6 6 6-6 6" /></svg
+          ></a>
+        </div>
+        <div class="code-example">
+          <div class="code-title">JavaScript <span>ES modules</span></div>
+          <pre><code><span class="code-key">import</span> { scan } <span class="code-key">from</span> <span class="code-string">'qr-sal'</span>;
+
+<span class="code-key">const</span> result = scan(imageData, {
+  multiple: <span class="code-key">true</span>,
+  timeLimitMs: <span class="code-number">12000</span>
+});
+
+<span class="code-key">for</span> (<span class="code-key">const</span> code <span class="code-key">of</span> result.codes) {
+  console.log(code.text, code.corners);
+}</code></pre>
+        </div>
+      </section>
+      <p class="limit-note">
+        Some QR codes cannot be recovered. A successful decode checks QR structure and
+        error correction; it does not verify the sender or the safety of a link.
+      </p>
+    </main>
+    <footer>
+      <span
+        >Built by <a href="https://github.com/SellyAJ">Sal</a>. Open to a closer
+        look.</span
+      >
+      <div>
+        <a href="privacy.html">Privacy</a><a href="THIRD-PARTY-NOTICES.txt">Credits</a
+        ><a href="https://github.com/SellyAJ/qr-sal/issues">Report an issue</a>
+      </div>
+    </footer>
+    <noscript
+      ><p class="noscript">
+        JavaScript is required to decode QR codes in your browser. You can also use the
+        library from the GitHub repository.
+      </p></noscript
+    >
+  </body>
+</html>

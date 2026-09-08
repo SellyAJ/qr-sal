@@ -1,0 +1,75 @@
+{
+  "name": "qr-sal",
+  "version": "0.1.0",
+  "description": "A dependency-free JavaScript QR decoder with multi-code detection, recovery passes, and diagnostic traces.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Sal (https://github.com/SellyAJ)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SellyAJ/qr-sal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SellyAJ/qr-sal/issues"
+  },
+  "homepage": "https://sellyaj.github.io/qr-sal/",
+  "keywords": [
+    "qr",
+    "qrcode",
+    "qr-code",
+    "scanner",
+    "decoder",
+    "barcode",
+    "javascript",
+    "typescript",
+    "browser",
+    "reed-solomon"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./browser": {
+      "types": "./dist/browser.d.mts",
+      "default": "./dist/browser.mjs"
+    },
+    "./worker": "./dist/worker.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "THIRD-PARTY-NOTICES.txt",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/test.mjs",
+    "test:api": "node --test test/public-api.test.mjs",
+    "check:types": "tsc -p test/tsconfig.json",
+    "check:privacy": "node scripts/check-public.mjs",
+    "dev": "node scripts/serve.mjs",
+    "prepare": "npm run build",
+    "prepack": "npm run build && npm run check:privacy"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "pdfjs-dist": "6.3.289",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  }
+}
