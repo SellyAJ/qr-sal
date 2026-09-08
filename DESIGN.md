@@ -2,134 +2,134 @@
 name: QR Sal
 description: A compact local QR scanner with readable results.
 colors:
-  paper: "#f6f8fc"
-  white: "#fff"
-  ink: "#172235"
-  muted: "#57677c"
-  line: "#dce3ee"
-  blue: "#2458dc"
-  blue-wash: "#edf2ff"
-  blue-hover: "#1749c6"
-  green: "#146548"
-  red: "#a52235"
-  code-surface: "#edf1f8"
-  code-line: "#d8e0ed"
-  code-key: "#6543a1"
-  code-string: "#0f644b"
+  paper: '#f6f8fc'
+  white: '#fff'
+  ink: '#172235'
+  muted: '#57677c'
+  line: '#dce3ee'
+  blue: '#2458dc'
+  blue-wash: '#edf2ff'
+  blue-hover: '#1749c6'
+  green: '#146548'
+  red: '#a52235'
+  code-surface: '#edf1f8'
+  code-line: '#d8e0ed'
+  code-key: '#6543a1'
+  code-string: '#0f644b'
 typography:
   display:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "clamp(32px, 4vw, 48px)"
+    fontFamily: 'Manrope, sans-serif'
+    fontSize: 'clamp(32px, 4vw, 48px)'
     fontWeight: 750
     lineHeight: 1.15
-    letterSpacing: "-1.4px"
+    letterSpacing: '-1.4px'
   headline:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "26px"
+    fontFamily: 'Manrope, sans-serif'
+    fontSize: '26px'
     fontWeight: 700
     lineHeight: 1.3
-    letterSpacing: "-0.7px"
+    letterSpacing: '-0.7px'
   panel-title:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "13px"
+    fontFamily: 'Manrope, sans-serif'
+    fontSize: '13px'
     fontWeight: 750
     lineHeight: 1.6
   body:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "14px"
+    fontFamily: 'Manrope, sans-serif'
+    fontSize: '14px'
     fontWeight: 400
     lineHeight: 1.6
   label:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "12px"
+    fontFamily: 'Manrope, sans-serif'
+    fontSize: '12px'
     fontWeight: 700
     lineHeight: 1.2
   text-action:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "12px"
+    fontFamily: 'Manrope, sans-serif'
+    fontSize: '12px'
     fontWeight: 650
     lineHeight: 1.6
   code:
-    fontFamily: "ui-monospace, SFMono-Regular, Consolas, monospace"
-    fontSize: "12px"
+    fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace'
+    fontSize: '12px'
     fontWeight: 400
     lineHeight: 1.7
   code-example:
-    fontFamily: "ui-monospace, SFMono-Regular, Consolas, monospace"
-    fontSize: "12px"
+    fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace'
+    fontSize: '12px'
     fontWeight: 400
     lineHeight: 1.75
 rounded:
-  compact: "6px"
-  control: "8px"
-  inset: "12px"
-  panel: "14px"
+  compact: '6px'
+  control: '8px'
+  inset: '12px'
+  panel: '14px'
 spacing:
-  inline: "8px"
-  control: "12px"
-  inset: "16px"
-  panel: "20px"
-  group: "24px"
-  page: "42px"
+  inline: '8px'
+  control: '12px'
+  inset: '16px'
+  panel: '20px'
+  group: '24px'
+  page: '42px'
 components:
   button-primary:
-    backgroundColor: "{colors.blue}"
-    textColor: "{colors.white}"
-    typography: "{typography.label}"
-    rounded: "{rounded.control}"
-    padding: "12px 16px"
+    backgroundColor: '{colors.blue}'
+    textColor: '{colors.white}'
+    typography: '{typography.label}'
+    rounded: '{rounded.control}'
+    padding: '12px 16px'
   button-primary-hover:
-    backgroundColor: "{colors.blue-hover}"
+    backgroundColor: '{colors.blue-hover}'
   button-secondary:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.ink}"
-    typography: "{typography.label}"
-    rounded: "{rounded.control}"
-    padding: "12px 16px"
+    backgroundColor: '{colors.white}'
+    textColor: '{colors.ink}'
+    typography: '{typography.label}'
+    rounded: '{rounded.control}'
+    padding: '12px 16px'
   button-secondary-hover:
-    backgroundColor: "{colors.paper}"
+    backgroundColor: '{colors.paper}'
   button-text:
-    backgroundColor: "transparent"
-    textColor: "{colors.muted}"
-    typography: "{typography.text-action}"
-    rounded: "{rounded.control}"
-    padding: "8px"
+    backgroundColor: 'transparent'
+    textColor: '{colors.muted}'
+    typography: '{typography.text-action}'
+    rounded: '{rounded.control}'
+    padding: '8px'
   button-text-hover:
-    textColor: "{colors.blue}"
+    textColor: '{colors.blue}'
   button-page:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.control}"
-    padding: "5px"
+    backgroundColor: '{colors.white}'
+    textColor: '{colors.ink}'
+    rounded: '{rounded.control}'
+    padding: '5px'
   select:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.compact}"
-    padding: "8px"
+    backgroundColor: '{colors.white}'
+    textColor: '{colors.ink}'
+    rounded: '{rounded.compact}'
+    padding: '8px'
   result-count:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.compact}"
-    height: "24px"
+    backgroundColor: '{colors.paper}'
+    textColor: '{colors.ink}'
+    rounded: '{rounded.compact}'
+    height: '24px'
   scanner-panel:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.panel}"
+    backgroundColor: '{colors.white}'
+    textColor: '{colors.ink}'
+    rounded: '{rounded.panel}'
   result-item:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.ink}"
-    padding: "18px 20px"
+    backgroundColor: '{colors.white}'
+    textColor: '{colors.ink}'
+    padding: '18px 20px'
   status-busy:
-    backgroundColor: "{colors.blue-wash}"
-    textColor: "{colors.blue}"
-    padding: "14px 20px"
+    backgroundColor: '{colors.blue-wash}'
+    textColor: '{colors.blue}'
+    padding: '14px 20px'
   status-success:
-    textColor: "{colors.green}"
+    textColor: '{colors.green}'
   status-error:
-    textColor: "{colors.red}"
+    textColor: '{colors.red}'
   code-container:
-    backgroundColor: "{colors.code-surface}"
-    rounded: "{rounded.inset}"
+    backgroundColor: '{colors.code-surface}'
+    rounded: '{rounded.inset}'
 ---
 
 # Design System: QR Sal
