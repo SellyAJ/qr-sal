@@ -20,7 +20,7 @@ import {
   fitFinderMap,
   verifyProjectiveFinder,
 } from './finder-geometry.mjs';
-export const ENGINE_VERSION = 'qr-sal-0.1.0';
+export const ENGINE_VERSION = 'qr-sal-0.1.1';
 export function grayscale(image) {
   const { width, height, data } = image;
   if (
@@ -92,39 +92,86 @@ export function binarize(gray, w, h, adaptive = false, invert = false) {
     }
   }
   const r = typeof adaptive === 'object' ? adaptive.radius : 20;
+  // Window bounds depend only on the column. Reuse them across rows, and
+  // keep the common mean-only path free of contrast/variance work per pixel.
+  const lefts = new Float64Array(w),
+    rights = new Float64Array(w),
+    spans = new Float64Array(w);
+  for (let x = 0; x < w; x++) {
+    lefts[x] = Math.max(0, x - r);
+    rights[x] = Math.min(w, x + r + 1);
+    spans[x] = rights[x] - lefts[x];
+  }
+  const inverted = invert ? 1 : 0;
+  const localContrast = typeof adaptive === 'object';
   for (let y = 0; y < h; y++) {
     const t = Math.max(0, y - r),
-      b = Math.min(h, y + r + 1);
+      b = Math.min(h, y + r + 1),
+      top = t * stride,
+      bottom = b * stride,
+      rows = b - t,
+      row = y * w;
+    if (!squares) {
+      for (let x = 0; x < w; x++) {
+        const l = lefts[x],
+          right = rights[x];
+        const mean =
+          (integral[bottom + right] -
+            integral[top + right] -
+            integral[bottom + l] +
+            integral[top + l]) /
+          (rows * spans[x]);
+        out[row + x] = (gray[row + x] < mean - 7 ? 1 : 0) ^ inverted;
+      }
+      continue;
+    }
     for (let x = 0; x < w; x++) {
-      const l = Math.max(0, x - r),
-        right = Math.min(w, x + r + 1),
+      const l = lefts[x],
+        right = rights[x],
+        area = rows * spans[x],
         mean =
-          (integral[b * stride + right] -
-            integral[t * stride + right] -
-            integral[b * stride + l] +
-            integral[t * stride + l]) /
-          ((b - t) * (right - l));
-      const variance = squares
-        ? Math.max(
-            0,
-            (squares[b * stride + right] -
-              squares[t * stride + right] -
-              squares[b * stride + l] +
-              squares[t * stride + l]) /
-              ((b - t) * (right - l)) -
-              mean * mean,
-          )
-        : 0;
-      const offset = contrast
-        ? typeof adaptive === 'object'
-          ? Math.max(0.05, Math.sqrt(variance) * 0.07)
-          : Math.max(0.6, Math.min(7, Math.sqrt(variance) * 0.15))
-        : 7;
-      out[y * w + x] =
-        (gray[y * w + x] < mean - offset ? 1 : 0) ^ (invert ? 1 : 0);
+          (integral[bottom + right] -
+            integral[top + right] -
+            integral[bottom + l] +
+            integral[top + l]) /
+          area;
+      const variance = Math.max(
+        0,
+        (squares[bottom + right] -
+          squares[top + right] -
+          squares[bottom + l] +
+          squares[top + l]) /
+          area -
+          mean * mean,
+      );
+      const offset = localContrast
+        ? Math.max(0.05, Math.sqrt(variance) * 0.07)
+        : Math.max(0.6, Math.min(7, Math.sqrt(variance) * 0.15));
+      out[row + x] = (gray[row + x] < mean - offset ? 1 : 0) ^ inverted;
     }
   }
   return out;
+}
+
+// Scope reuse to one immutable source image and one scan. Cache only the three
+// standard positive thresholds (at most 24 MB), never payloads or failed grids.
+// Inversion is exactly XOR, so it needs no second histogram/integral calculation.
+function sourceBinarizer(gray, w, h) {
+  const cache = new Map();
+  return (adaptive, invert = false) => {
+    const reusable =
+      gray.length * 3 <= 24_000_000 &&
+      (adaptive === false || adaptive === true || adaptive === 'contrast');
+    let bits = reusable ? cache.get(adaptive) : null;
+    if (!bits) {
+      bits = binarize(gray, w, h, adaptive);
+      if (reusable) cache.set(adaptive, bits);
+    }
+    if (!invert) return bits;
+    const inverse = new Uint8Array(bits.length);
+    for (let i = 0; i < bits.length; i++) inverse[i] = bits[i] ^ 1;
+    return inverse;
+  };
 }
 const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 function ratio(counts) {
@@ -1855,11 +1902,14 @@ function scanPass(
     enhanced = false,
     seedCodes = [],
   } = {},
+  sourceGray = null,
+  sourceBinary = null,
 ) {
   const started = performance.now(),
-    gray = grayscale(image),
+    gray = sourceGray ?? grayscale(image),
     deadline = started + Math.max(100, Math.min(60000, timeLimitMs)),
     { width: w, height: h } = image;
+  const thresholdSource = sourceBinary ?? sourceBinarizer(gray, w, h);
   const diagnostics = [];
   const conflicts = [];
   const codes = [...seedCodes];
@@ -1885,7 +1935,7 @@ function scanPass(
   ]) {
     if (performance.now() > deadline) break;
     const attemptStarted = performance.now();
-    const result = runBinary(binarize(gray, w, h, adaptive, invert), w, h, {
+    const result = runBinary(thresholdSource(adaptive, invert), w, h, {
       deadline,
       trace,
       enhanced,
@@ -2059,6 +2109,7 @@ function scanPass(
         height: sh,
         data: reduced,
       } = resizeGray(gray, w, h, factor);
+      const thresholdReduced = sourceBinarizer(reduced, sw, sh);
       for (const [adaptive, invert, filter] of [
         [false, false],
         [true, false],
@@ -2082,7 +2133,9 @@ function scanPass(
         }));
         const pixels = filter ? filterGray(reduced, sw, sh, filter) : reduced;
         const result = runBinary(
-          binarize(pixels, sw, sh, adaptive, invert),
+          filter
+            ? binarize(pixels, sw, sh, adaptive, invert)
+            : thresholdReduced(adaptive, invert),
           sw,
           sh,
           { deadline, trace, enhanced, knownCodes, gray: reduced },
@@ -2193,13 +2246,20 @@ function scanPass(
       for (const adaptive of modes) {
         if (performance.now() > deadline) break;
         const begin = performance.now();
-        const result = runBinary(binarize(pixels, w, h, adaptive), w, h, {
-          deadline,
-          trace,
-          enhanced,
-          knownCodes: codes,
-          gray: pixels,
-        });
+        const result = runBinary(
+          pixels === gray
+            ? thresholdSource(adaptive)
+            : binarize(pixels, w, h, adaptive),
+          w,
+          h,
+          {
+            deadline,
+            trace,
+            enhanced,
+            knownCodes: codes,
+            gray: pixels,
+          },
+        );
         const preprocessing = specification.radius
           ? 'local-contrast-radius-' + specification.radius
           : 'source-unsharp-' +
@@ -2242,14 +2302,21 @@ function scanPass(
         for (const adaptive of [false, true, 'contrast']) {
           if (performance.now() > deadline) break;
           const begin = performance.now(),
-            result = scanBinary(binarize(pixels, w, h, adaptive), w, h, {
-              deadline,
-              trace,
-              enhanced,
-              gray: pixels,
-              knownCodes: codes,
-              extraFinders: unresolved,
-            });
+            result = scanBinary(
+              pixels === gray
+                ? thresholdSource(adaptive)
+                : binarize(pixels, w, h, adaptive),
+              w,
+              h,
+              {
+                deadline,
+                trace,
+                enhanced,
+                gray: pixels,
+                knownCodes: codes,
+                extraFinders: unresolved,
+              },
+            );
           const preprocessing =
             'finder-fusion-' +
             (specification ? 'unsharp-' + specification.sigma : 'source') +
@@ -2313,24 +2380,36 @@ export function scanImage(image, options = {}) {
   if (!Number.isFinite(requestedBudget))
     throw Error('Scan time limit must be a finite number');
   const budget = Math.max(100, Math.min(60000, requestedBudget));
-  const base = scanPass(image, {
-    ...options,
-    timeLimitMs: Math.min(5000, budget),
-    enhanced: false,
-    seedCodes: [],
-  });
+  const gray = grayscale(image);
+  const thresholdSource = sourceBinarizer(gray, image.width, image.height);
+  const base = scanPass(
+    image,
+    {
+      ...options,
+      timeLimitMs: Math.min(5000, budget),
+      enhanced: false,
+      seedCodes: [],
+    },
+    gray,
+    thresholdSource,
+  );
   if (
     options.recovery === false ||
     (options.multiple === false && base.codes.length) ||
     budget - (performance.now() - started) < 100
   )
-    return base;
-  const extra = scanPass(image, {
-    ...options,
-    timeLimitMs: budget - (performance.now() - started),
-    enhanced: true,
-    seedCodes: base.codes,
-  });
+    return { ...base, elapsedMs: performance.now() - started };
+  const extra = scanPass(
+    image,
+    {
+      ...options,
+      timeLimitMs: budget - (performance.now() - started),
+      enhanced: true,
+      seedCodes: base.codes,
+    },
+    gray,
+    thresholdSource,
+  );
   const diagnostics = [
     ...base.diagnostics.map((d) => ({ ...d, searchPhase: 'established' })),
     ...extra.diagnostics.map((d) => ({ ...d, searchPhase: 'enhanced' })),

@@ -11,6 +11,8 @@ The same pipeline runs in Node and the browser. There is no neural model, expect
 
 The established pass runs first. If budget remains, enhanced recovery uses the image’s own results and measured structure. The decoder never takes a ground-truth text label or a benchmark annotation as an input.
 
+Threshold calculations reuse column window bounds and avoid variance work in mean-only modes. A scan can reuse its three standard positive threshold images; inverted retries use exact bit inversion. Caches are local to the scan and capped at 24 MB per resolution, with caching disabled above that resolution's cap. Source and reduced-resolution caches may coexist. No decoded answer is cached across input images, and the same geometry, format and error-correction gates still run.
+
 ## Why diagnostics matter
 
 Failure logs distinguish finder detection, grouping, sampling, format, error correction, and payload parsing. Bounded failed-grid samples preserve the evidence closest to a valid decode. This makes it possible to investigate whether a failure came from localization, warped sampling or insufficient information, instead of adding blind retries.
@@ -21,4 +23,4 @@ These are **observations about the algorithm**, not proof that a document is dam
 
 Error correction reduces mistakes but cannot authenticate a code. A badly degraded candidate might, in principle, produce another valid message. Payload agreement between readers is useful evidence, not a proof of the physical author’s intent. QR Sal makes no zero-error or calibrated-confidence claim.
 
-Recovery exchanges time for additional hypotheses. Budget checks are cooperative, not preemptive. On interactive pages, isolate the scanner in a worker and keep cancellation available. Speed optimization remains a separate area of work.
+Recovery exchanges time for additional hypotheses. Budget checks are cooperative, not preemptive. On interactive pages, isolate the scanner in a worker and keep cancellation available. Expensive recovery can still reach the full time budget.

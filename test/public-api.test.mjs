@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import vm from 'node:vm';
 import { scan, decodeMatrix, VERSION } from '../dist/index.mjs';
 const require = createRequire(import.meta.url);
+const { version } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)));
 const fixture = JSON.parse(
   readFileSync(new URL('./fixtures/qr-matrices.json', import.meta.url)),
 ).cases[0];
@@ -44,7 +45,7 @@ test('ESM, CommonJS and browser global return exact payloads and leave pixels un
     assert.equal(result.codes[0].text, fixture.text);
     assert.equal(result.codes[0].corners.length, 4);
     assert.equal(result.codes[0].checksumPassed, true);
-    assert.equal(result.engine, 'qr-sal-0.1.0');
+    assert.equal(result.engine, `qr-sal-${version}`);
     assert.deepEqual(pixels, before);
     assert.equal(api.decodeMatrix(matrix, fixture.size).text, fixture.text);
   }
@@ -72,4 +73,15 @@ test('invalid inputs and invalid matrices fail explicitly', () => {
   assert.throws(() => scan({ ...image, data: pixels.subarray(1) }));
   assert.throws(() => decodeMatrix(new Uint8Array(441).fill(2), 21), TypeError);
   assert.throws(() => decodeMatrix(new Uint8Array(441), 21));
+});
+
+test('threshold reuse cannot retain another scan or stale caller pixels', () => {
+  const data = pixels.slice();
+  const image = { width, height: width, data };
+  assert.equal(scan(image, { multiple: false }).codes[0].text, fixture.text);
+  data.fill(255);
+  assert.deepEqual(scan(image, { recovery: false }).codes, []);
+  data.set(pixels);
+  assert.equal(scan(image, { multiple: false }).codes[0].text, fixture.text);
+  assert.deepEqual(data, pixels);
 });

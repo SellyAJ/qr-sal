@@ -21,10 +21,10 @@ The decoder core has **zero runtime dependencies**. The demo uses PDF.js to rend
 The package is distributed through this GitHub repository and its releases. It is **not published to the npm registry**.
 
 ```sh
-npm install github:SellyAJ/qr-sal#v0.1.0
+npm install github:SellyAJ/qr-sal#v0.1.1
 ```
 
-Git installs run the `prepare` build and need development dependencies. For an already-built package, download `qr-sal-0.1.0.tgz` from [Releases](https://github.com/SellyAJ/qr-sal/releases) and run `npm install ./qr-sal-0.1.0.tgz`. For reproducibility, pin the release tag or commit rather than the moving branch.
+Git installs run the `prepare` build and need development dependencies. For an already-built package, download `qr-sal-0.1.1.tgz` from [Releases](https://github.com/SellyAJ/qr-sal/releases) and run `npm install ./qr-sal-0.1.1.tgz`. For reproducibility, pin the release tag or commit rather than the moving branch.
 
 ```js
 import { scan } from 'qr-sal';
@@ -77,6 +77,8 @@ Open the local URL printed by the server. The `prepare` script builds the librar
 The underlying engine reached **1,135 of 1,148 distinct annotated QR regions** on the 487-image BoofCV corpus (**98.87% region coverage**). Thirteen regions remain undecoded. On 4,593 separately scanned QR crops, every returned payload agreed with the independent comparison reader.
 
 These datasets were used during development and tuning. This is **not an unseen-test accuracy estimate, a guarantee of correct payloads, or a speed comparison on equal compute**. The BoofCV run allowed up to 35 seconds of recovery per image, while the ZXing-C++ comparison used a much faster standard configuration. Read [the full methodology, timing, annotation issues, and scope](docs/BENCHMARKS.md) before quoting these numbers.
+
+Version 0.1.1 preserves every saved result across both collections and reduces decoding time by **5.3% on a preselected 23-image timing sample**, measured three times per input. A separate fresh 70-image evaluation is also recorded. See [the performance report](docs/PERFORMANCE.md) for selection, exact comparisons and remaining failures.
 
 ## What it supports
 

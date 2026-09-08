@@ -1,6 +1,8 @@
 # Benchmark evidence
 
-Measured 2026-09-08 on the frozen development engine underlying QR Sal 0.1.0. The public extraction preserves its 22 core modules apart from the version string; the new wrapper, packaging, synthetic fixtures and demo are separately verified. The full corpus was **not re-run after rebranding**. Public source fingerprints and sanitized per-image measurements are in [benchmark-evidence.json](benchmark-evidence.json).
+The historical baseline below was measured 2026-09-08 on the frozen development engine underlying QR Sal 0.1.0. Its public extraction preserved 22 core modules apart from the version string; the wrapper, packaging, synthetic fixtures and demo were separately verified. That initial release did not re-run the full corpus after rebranding. Original fingerprints and sanitized per-image measurements remain in [benchmark-evidence.json](benchmark-evidence.json).
+
+**0.1.1 follow-up, 2026-09-09:** both complete development collections were re-run and every saved location/text pair was preserved. A separate 70-image OpenCV evaluation and a three-repeat paired timing check are documented in [Performance work and validation](PERFORMANCE.md), with [new measurement evidence](performance-evidence.json). The underlying coverage limits below still apply.
 
 ## BoofCV mixed scenes
 

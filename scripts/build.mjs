@@ -2,8 +2,12 @@ import { build } from 'esbuild';
 import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { ENGINE_VERSION } from '../src/core/scanner.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 process.chdir(root);
+const { version } = JSON.parse(await readFile('package.json', 'utf8'));
+if (ENGINE_VERSION !== `qr-sal-${version}`)
+  throw new Error('Package and decoder versions disagree');
 await mkdir('dist', { recursive: true });
 const common = {
   bundle: true,
@@ -11,7 +15,7 @@ const common = {
   legalComments: 'eof',
   minify: true,
   banner: {
-    js: '/*! QR Sal v0.1.0 | MIT | Copyright 2026 Sal (SellyAJ) | See THIRD-PARTY-NOTICES.txt */',
+    js: `/*! QR Sal v${version} | MIT | Copyright 2026 Sal (SellyAJ) | See THIRD-PARTY-NOTICES.txt */`,
   },
 };
 await Promise.all([
